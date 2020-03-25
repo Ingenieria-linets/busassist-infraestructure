@@ -246,10 +246,10 @@ kubectl get deployments
 kubectl get services
 ```
 
-__La aplicación desplegada NO estara disponible para su uso aun, porque depende de la migración de postgres, que se explicara en un paso posterior, al ingresar al IP configurado mostrara el siguiente mensaje:
+__La aplicación desplegada NO estara disponible para su uso aun, porque depende de la migración de postgres, que se explicara en un paso posterior, al ingresar al IP configurado mostrara el siguiente mensaje:__
 
 
-
+![](images/sso_error2.png)
 
 
 
