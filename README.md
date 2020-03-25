@@ -227,6 +227,9 @@ echo stringEnviromentVariable | base64
 
 La documentación, indica que codificando con __echo | base64__ debería funcionar, pero al hacerlo de esta forma no se reconocen las variables, a pesar de que al decodificarlas muestre el valor correcto, quizas sea por configuracion de la consola. Para resolver este problema utilice esta [pagina](https://www.base64encode.org/) para encode y decode.
 
+En los archivos deployment.yaml, debes cambiar el nombre de la imagen Docker por las que subiste al registry del proyecto, para cada una de las aplicaciones. 
+
+
 ### 10.1 SSO
 
 Ubicate en el path __~/sso/__
@@ -234,8 +237,18 @@ Ubicate en el path __~/sso/__
 ```
 kubectl apply -f secret.yaml
 kubectl apply -f service.yaml
-
+kubectl apply -f deployment.yaml
 ```
+
+Corrobora el estado del despliegue:
+```
+kubectl get deployments
+kubectl get services
+```
+
+__La aplicación desplegada NO estara disponible para su uso aun, porque depende de la migración de postgres, que se explicara en un paso posterior, al ingresar al IP configurado mostrara el siguiente mensaje:
+
+
 
 
 
