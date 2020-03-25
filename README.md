@@ -102,7 +102,7 @@ kubectl create namespace databases
 ```
 
 ### 7.1 MongoDB Users
-Ubicate en el path __*/mongo-users/__ 
+Ubicate en el path __~/mongo-users/__ 
 
 ```
 kubectl apply -f secret.yaml
@@ -120,17 +120,17 @@ Prueba tu conexión:
 El usuario y la contraseña se encuentran en el archivo secrets.yaml, estan codificados en base64, para poder ver los valores usa:
 
 ```
-echo __stringEnviromentVariablebase64__ | base64 -d
+echo stringEnviromentVariablebase64 | base64 -d
 ```
 
 CX STRING:
 ```
-mongodb://<user>:<password>@34.82.32.103:27017/admin
+mongodb://<user>:<password>@<ip>:<port>/admin
 ```
 
 
-### 7.2 postgresSQL Users
-Ubicate en el path __*/postgresSQL/__
+### 7.2 PostgresSQL Users
+Ubicate en el path __~/postgresSQL/__
 
 ```
 kubectl apply -f secret.yaml
@@ -150,13 +150,94 @@ Prueba tu conexión:
 El usuario y la contraseña se encuentran en el archivo secrets.yaml, estan codificados en base64, para poder ver los valores usa:
 
 ```
-echo __stringEnviromentVariablebase64__ | base64 -d
+echo stringEnviromentVariablebase64 | base64 -d
 ```
 
 CX STRING:
 ```
-postgresql://<user>:<password>@35.233.141.24:3365
+postgresql://<user>:<password>@<ip>:<port>
 ```
+
+## 8. Migrar MongoDB Users
+Antes de realizar la migración, hay que forzar el downgrade de versión de mongo. El Deployment esta configurado con la versión 3.4 la cual no es compatible con el schema de BD (versión 2.6). Se realizarón pruebas sin exito utilizando otras versiones de mongo. El downgrade es a la versión 3.0.
+
+```
+mongo mongodb://<user>:<password>@<ip>:<port>/admin
+use admin
+db.grantRolesToUser("admin", ["__system", "root"])
+db.system.version.remove({})
+db.system.version.insert({ "_id" : "authSchema", "currentVersion" : 3 })
+```
+
+Comando utilizado para el dump:
+
+```
+mongodump --host <ip>:<port> --username <user> --password <password> --authenticationDatabase <authDatabase> --db <database>
+```
+
+Comando utilizado para el restore:
+
+```
+mongorestore --host <ip>:<port> --username <user> --password <password> --authenticationDatabase <authDatabase>
+```
+
+Una vez realizado el restore, cambiate a la base de datos de usuario y crea el usuario que se utilizara como variable de entorno en el despliegue de las aplicaciones.
+
+```
+mongo mongodb://<user>:<password>@<ip>:<port>/admin
+use <database>
+db.createUser( { user: "<user>", pwd: "<password>", roles: [ { role: "readWrite", db: "<database>" } ] } )
+```
+
+## 9. Sube las images Docker al registry de Google.
+Puedes descargar las imagenes del registry de transit (dockerhub) o del registry de GCP. Para descargar imagenes del registry de GCP debes estar conectado al proyecto del cual las quieres descargar, para este ejemplo, me conecte al proyecto __busassist2-264414__ que corresponde a Santiago Prod GCP.
+
+```
+docker pull gcr.io/busassist2-264414/busassist-web:2.0.0
+docker pull gcr.io/busassist2-264414/dispatchapp:2.0.0
+docker pull gcr.io/busassist2-264414/sso:2.0.0 
+docker pull gcr.io/busassist2-264414/users:2.0.0 
+```
+
+Luego cambia el tag por el proyecto correspondiente, en este caso __busassist-tutorial__.
+```
+docker tag gcr.io/busassist2-264414/busassist-web:2.0.0 gcr.io/busassist-tutorial/busassist-web:2.0.0
+docker tag gcr.io/busassist2-264414/dispatchapp:2.0.0 gcr.io/busassist-tutorial/dispatchapp:2.0.0
+docker tag gcr.io/busassist2-264414/sso:2.0.0 gcr.io/busassist-tutorial/sso:2.0.0
+docker tag gcr.io/busassist2-264414/users:2.0.0 gcr.io/busassist-tutorial/users:2.0.0
+```
+
+Sube las imagenes al registry de GCP. 
+
+```
+docker push gcr.io/busassist-tutorial/busassist-web:2.0.0
+docker push gcr.io/busassist-tutorial/dispatchapp:2.0.0
+docker push gcr.io/busassist-tutorial/sso:2.0.0
+docker push gcr.io/busassist-tutorial/users:2.0.0
+```
+
+
+## 10. Desplegar Aplicaciones
+
+Antes de desplegar, desbes configurar las variables de entorno. En los archivos secrets.yaml, debes utilizar las variables codificadas en base64. 
+
+```
+echo stringEnviromentVariable | base64
+```
+
+La documentación, indica que codificando con __echo | base64__ debería funcionar, pero al hacerlo de esta forma no se reconocen las variables, a pesar de que al decodificarlas muestre el valor correcto, quizas sea por configuracion de la consola. Para resolver este problema utilice esta [pagina](https://www.base64encode.org/) para encode y decode.
+
+### 10.1 SSO
+
+Ubicate en el path __~/sso/__
+
+```
+kubectl apply -f secret.yaml
+kubectl apply -f service.yaml
+
+```
+
+
 
 
 
