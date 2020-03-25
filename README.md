@@ -158,6 +158,15 @@ CX STRING:
 postgresql://<user>:<password>@<ip>:<port>
 ```
 
+### [Crear Cluster MongoDB Atlas Producción](https://docs.atlas.mongodb.com/getting-started/)
+
+Para conceptos de este tutorial, no se creo un nuevo cluster, se utilizo uno ya existente. 
+
+Para migrar sigue las instrucciones:
+
+![](images/atlas.png)
+
+
 ## 8. Migrar MongoDB Users
 Antes de realizar la migración, hay que forzar el downgrade de versión de mongo. El Deployment esta configurado con la versión 3.4 la cual no es compatible con el schema de BD (versión 2.6). Se realizarón pruebas sin exito utilizando otras versiones de mongo. El downgrade es a la versión 3.0.
 
@@ -253,5 +262,45 @@ __La aplicación desplegada NO estara disponible para su uso aun, porque depende
 
 
 
+### 10.2 USERS
+
+Ubicate en el path __~/users/__
+
+```
+kubectl apply -f secret.yaml
+kubectl apply -f service.yaml
+kubectl apply -f deployment.yaml
+```
+
+Corrobora el estado del despliegue:
+```
+kubectl get deployments
+kubectl get services
+```
+
+__La aplicacion desplegada NO funcionara hasta la migración de postgres.__
+
+Puedes corroborar esta informacion revisando los logs de la app. 
+```
+kubectl get pods
+kubectl logs <podName>
+```
+### 10.2 DISPATCHAPP
+
+En el secret.yaml 
+
+Ubicate en el path __~/dispatchapp/__
+
+```
+kubectl apply -f secret.yaml
+kubectl apply -f service.yaml
+kubectl apply -f deployment.yaml
+```
+
+Corrobora el estado del despliegue:
+```
+kubectl get deployments
+kubectl get services
+```
 
 
