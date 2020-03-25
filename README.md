@@ -53,4 +53,111 @@ gcloud compute addresses describe ba2-tutorial-mongodb-users-ip --region us-west
 Este paso es igual para los services de todas las apps de ba2. 
 ![](images/services_setip.png)
 
-## 
+## 4. Desencripta los secrets.yaml.enc
+Los archivos estan encriptaos con el servicio [KMS](https://cloud.google.com/kms/docs/quickstart). El llavero y las llaves deben estar creadas previamente.
+
+```
+gcloud kms keyrings create ba2-tutorial --location global
+gcloud kms keys create cluster --location global --keyring ba2-tutorial --purpose encryption
+```
+
+Navega al path donde se encuentra el archivo y ejecuta:
+
+```
+gcloud kms decrypt --plaintext-file=secret.yaml --ciphertext-file=secret.yaml.enc --location=global --keyring=ba2-tutorial   --key=cluster
+```
+
+Para encriptar un archivo:
+```
+gcloud kms encrypt --plaintext-file=secret.yaml --ciphertext-file=secret.yaml.enc --location=global --keyring=ba2-tutorial   --key=cluster
+```
+
+## 5. [Instalar kubectl](https://cloud.google.com/kubernetes-engine/docs/quickstart) 
+
+```
+gcloud components install kubectl
+```
+
+Verifica la instalación:
+```
+kubectl version
+```
+## 6. Conectate al cluster
+
+```
+gcloud container clusters get-credentials cluster-tutorial
+```
+
+Verifica tu conexión:
+```
+kubectl config get-contexts
+```
+
+
+## 7. Desplegar Bases de Datos
+Antes de desplegar las bases de datos, debes crear el namespace donde se desplegaran.
+
+```
+kubectl create namespace databases
+```
+
+### 7.1 MongoDB Users
+Ubicate en el path __*/mongo-users/__ 
+
+```
+kubectl apply -f secret.yaml
+kubectl apply -f pv.yaml
+kubectl apply -f mongo.yaml
+```
+Verifica el despliegue:
+
+```
+kubectl get deployment -n databases
+kubectl get service -n databases
+```
+
+Prueba tu conexión: 
+El usuario y la contraseña se encuentran en el archivo secrets.yaml, estan codificados en base64, para poder ver los valores usa:
+
+```
+echo __stringEnviromentVariablebase64__ | base64 -d
+```
+
+CX STRING:
+```
+mongodb://<user>:<password>@34.82.32.103:27017/admin
+```
+
+
+### 7.2 postgresSQL Users
+Ubicate en el path __*/postgresSQL/__
+
+```
+kubectl apply -f secret.yaml
+kubectl apply -f pv.yaml
+kubectl apply -f service.yaml
+kubectl apply -f deployment.yaml
+```
+
+Verifica el despliegue:
+
+```
+kubectl get deployment -n databases
+kubectl get service -n databases
+```
+
+Prueba tu conexión: 
+El usuario y la contraseña se encuentran en el archivo secrets.yaml, estan codificados en base64, para poder ver los valores usa:
+
+```
+echo __stringEnviromentVariablebase64__ | base64 -d
+```
+
+CX STRING:
+```
+postgresql://<user>:<password>@35.233.141.24:3365
+```
+
+
+
+
