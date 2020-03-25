@@ -303,4 +303,27 @@ kubectl get deployments
 kubectl get services
 ```
 
+![](images/dispatchapp_pending.png)
+
+Como se ve en la imagen, la IP que estamos utilizando no logra asignarse al service que que se desplego. Para obtener mas información:
+
+```
+kubectl describe services <servicesName>
+```
+
+![](images/dispatchapp_quota.png)
+
+Para resolver este problema, debes extender la quota en la consola de Google. 
+
+__Tip:__ Click en la columna __Current Usage__ para mostrar las que estan en uso. 
+
+
+![](images/gcp_quota.png)
+
+
+![](images/gcp_quota2.png)
+
+Te va a llegar un correo con el requerimiento y en unos minutos llegara un segundo correo confirmando que la quota se ha extendido. 
+
+
 
