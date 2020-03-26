@@ -229,12 +229,16 @@ docker push gcr.io/busassist-tutorial/users:2.0.0
 
 Antes de desplegar, desbes configurar las variables de entorno. En los archivos secrets.yaml, debes utilizar las variables codificadas en base64. 
 
+```
+echo stringEnviromentVariable | base64
+```
+
 La especificación de las variblaes de entorno se encuentra en cada repositorio, para este turorial, solo se cambiaron las variables de entorno relacionadas a las URL de los sitios y sus respectivas conexiones a las bases de datos. 
 
-[SSO](https://github.com/transituc/TransitUC-SSO/tree/new-infrastructure)
-[USERS](https://github.com/transituc/TransitUC-Users/tree/development)
-[DISPATCHAPP](https://github.com/transituc/BusAssist-Dispatchapp)
-[BUSASSIS-WEB](https://github.com/transituc/BusAssist-Web)
+- [SSO](https://github.com/transituc/TransitUC-SSO/tree/new-infrastructure)
+- [USERS](https://github.com/transituc/TransitUC-Users/tree/development)
+- [DISPATCHAPP](https://github.com/transituc/BusAssist-Dispatchapp)
+- [BUSASSIS-WEB](https://github.com/transituc/BusAssist-Web)
 
 Al momento de referenciar la URL, utiliza la siguiente nomenclatura:
 
@@ -242,10 +246,6 @@ __http://x.x.x.x/__
 
 Esto con el fin de que el redireccionamiento no falle. En un paso posterior se indicara como configurar el DNS.
 
-
-```
-echo stringEnviromentVariable | base64
-```
 
 La documentación, indica que codificando con __echo | base64__ debería funcionar, pero al hacerlo de esta forma no se reconocen las variables, a pesar de que al decodificarlas muestre el valor correcto, quizas sea por configuracion de la consola. Para resolver este problema utilice esta [pagina](https://www.base64encode.org/) para encode y decode.
 
@@ -342,7 +342,7 @@ Corrobora el estado del despliegue:
 kubectl get services
 ```
 
-Si el status continua en <pending> puedes eliminar el servicio y volver a desplegarlo. 
+Si el status continua en __pending__ puedes eliminar el servicio y volver a desplegarlo. 
 
 ```
 kubectl delete services <serviceName>
