@@ -366,7 +366,7 @@ __La aplicacion desplegada te redirigira al login del SSO que aun no esta dispon
 
 ## 11. Migrar Postgres
 
-Para ejecutar la migracion del schema postgres, primero debes acceder a un pod del __sso__.
+Para ejecutar la migracion del schema postgres, debes acceder a un pod del __sso__.
 
 ```
 kubectl get pods
