@@ -285,9 +285,8 @@ Puedes corroborar esta informacion revisando los logs de la app.
 kubectl get pods
 kubectl logs <podName>
 ```
-### 10.2 DISPATCHAPP
+### 10.3 DISPATCHAPP
 
-En el secret.yaml 
 
 Ubicate en el path __~/dispatchapp/__
 
@@ -325,5 +324,33 @@ __Tip:__ Click en la columna __Current Usage__ para mostrar las que estan en uso
 
 Te va a llegar un correo con el requerimiento y en unos minutos llegara un segundo correo confirmando que la quota se ha extendido. 
 
+Corrobora el estado del despliegue: 
+```
+kubectl get services
+```
+
+Si el status continua en <pending> puedes eliminar el servicio y volver a desplegarlo. 
+
+```
+kubectl delete services <serviceName>
+kubectl apply -f service.yaml
+```
+
+__La aplicacion desplegada te redirigira al login del SSO que aun no esta disponible.__
+
+
+### 10.4 BUASSIST-WEB
+
+Ubicate en el path __~/busassist-web/__
+
+```
+kubectl apply -f secret.yaml
+kubectl apply -f service.yaml
+kubectl apply -f deployment.yaml
+```
+
+__La aplicacion desplegada te redirigira al login del SSO que aun no esta disponible.__
+
+## 11. Migrar Postgres
 
 
