@@ -330,10 +330,10 @@ Para resolver este problema, debes extender la quota en la consola de Google.
 __Tip:__ Click en la columna __Current Usage__ para mostrar las que estan en uso. 
 
 
-![](images/gcp_quota.png)
+![](images/gcp_quota1.png)
 
 
-![](images/gcp_quota2.png)
+![](images/gcp_quota22.png)
 
 Te va a llegar un correo con el requerimiento y en unos minutos llegara un segundo correo confirmando que la quota se ha extendido. 
 
