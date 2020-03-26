@@ -390,4 +390,27 @@ Las credenciales para acceder al sitio las puedes encontrar [aquí](https://gith
 Para este tutorial se utiizo un backup de Santiago PROD. 
 
 ## 13. Configura el DNS para cada App.
+Los pasos para configurar el DNS son simimilares en todas las plataformas, por organización en GCP, cada proyecto tiene su configuración para __Cloud DNS__. Para este tutorial, se utilizaron configuraciones existentes. 
 
+__Importante: La propagación del DNS puede tardar varios minutos, por lo que si tratas de acceder inmediatamente, te saldra un error.__
+
+### 13.1 En AWS -> Route53 
+![](images/route53_1.png)
+
+![](images/route53_2.png)
+
+### 13.2 En GCP -> Cloud DNS.
+
+![](images/clouddns_1.png)
+![](images/clouddns_2.png)
+![](images/clouddns_3.png)
+
+Repetir los pasos para cada App.
+
+__Finalmente vuelve a actualizar las variables de entorno, y aplica los cambios.__
+
+```
+kubectl apply -f ~/<appName>/deployment.yaml
+```
+
+![](images/jt.gif)
