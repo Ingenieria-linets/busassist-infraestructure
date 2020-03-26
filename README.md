@@ -412,5 +412,6 @@ __Finalmente vuelve a actualizar las variables de entorno, y aplica los cambios.
 ```
 kubectl apply -f ~/<appName>/deployment.yaml
 ```
-
-![](images/jt.gif)
+<p align="center">
+  <img src="images/jt.gif">
+</p>
