@@ -158,7 +158,7 @@ CX STRING:
 postgresql://<user>:<password>@<ip>:<port>
 ```
 
-### [Crear Cluster MongoDB Atlas Producción](https://docs.atlas.mongodb.com/getting-started/)
+### 7.3 [Crear Cluster MongoDB Atlas Producción](https://docs.atlas.mongodb.com/getting-started/)
 
 Para conceptos de este tutorial, no se creo un nuevo cluster, se utilizo uno ya existente. 
 
@@ -217,7 +217,6 @@ docker tag gcr.io/busassist2-264414/users:2.0.0 gcr.io/busassist-tutorial/users:
 ```
 
 Sube las imagenes al registry de GCP. 
-
 ```
 docker push gcr.io/busassist-tutorial/busassist-web:2.0.0
 docker push gcr.io/busassist-tutorial/dispatchapp:2.0.0
@@ -229,6 +228,20 @@ docker push gcr.io/busassist-tutorial/users:2.0.0
 ## 10. Desplegar Aplicaciones
 
 Antes de desplegar, desbes configurar las variables de entorno. En los archivos secrets.yaml, debes utilizar las variables codificadas en base64. 
+
+La especificación de las variblaes de entorno se encuentra en cada repositorio, para este turorial, solo se cambiaron las variables de entorno relacionadas a las URL de los sitios y sus respectivas conexiones a las bases de datos. 
+
+[SSO](https://github.com/transituc/TransitUC-SSO/tree/new-infrastructure)
+[USERS](https://github.com/transituc/TransitUC-Users/tree/development)
+[DISPATCHAPP](https://github.com/transituc/BusAssist-Dispatchapp)
+[BUSASSIS-WEB](https://github.com/transituc/BusAssist-Web)
+
+Al momento de referenciar la URL, utiliza la siguiente nomenclatura:
+
+__http://x.x.x.x/__
+
+Esto con el fin de que el redireccionamiento no falle. En un paso posterior se indicara como configurar el DNS.
+
 
 ```
 echo stringEnviromentVariable | base64
@@ -353,4 +366,28 @@ __La aplicacion desplegada te redirigira al login del SSO que aun no esta dispon
 
 ## 11. Migrar Postgres
 
+Para ejecutar la migracion del schema postgres, primero debes acceder a un pod del __sso__.
+
+```
+kubectl get pods
+kubectl exec -ti <ssoPodName> bash
+bundle exec rake db:migrate
+exit
+```
+
+__Con esto las aplicaciones ya estan preparadas para funcionar. Si por alguna razon, la migracion de postgres falla, puedes realizarla manualmente conectandote con un cliente Postgres y ejecutando el [script](https://github.com/transituc/TransitUC-Users/tree/development) de creación de la bd.__
+
+## 12. Verifica el despliegue: 
+
+```
+kubectl get services 
+```
+
+Accede a la IP de cada App. 
+
+Las credenciales para acceder al sitio las puedes encontrar [aquí](https://github.com/transituc/BusAssist-Web/wiki/Credenciales-para-BusAssist).
+
+Para este tutorial se utiizo un backup de Santiago PROD. 
+
+## 13. Configura el DNS para cada App.
 
